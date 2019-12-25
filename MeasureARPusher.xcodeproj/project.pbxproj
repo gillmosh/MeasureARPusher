@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25A358A58FC66DE80AC9EE6B /* Pods_MeasureARPusher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F9F21FEC344D543B003BC9 /* Pods_MeasureARPusher.framework */; };
 		CE2D2082236F736F00332592 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2D2081236F736F00332592 /* AppDelegate.swift */; };
 		CE2D2084236F736F00332592 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2D2083236F736F00332592 /* ViewController.swift */; };
 		CE2D2087236F736F00332592 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE2D2085236F736F00332592 /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		81F9F21FEC344D543B003BC9 /* Pods_MeasureARPusher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MeasureARPusher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE2D207E236F736F00332592 /* MeasureARPusher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeasureARPusher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE2D2081236F736F00332592 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CE2D2083236F736F00332592 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +24,8 @@
 		CE2D2088236F737000332592 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE2D208B236F737100332592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE2D208D236F737100332592 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EE42F23157934299159C0FEC /* Pods-MeasureARPusher.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeasureARPusher.release.xcconfig"; path = "Target Support Files/Pods-MeasureARPusher/Pods-MeasureARPusher.release.xcconfig"; sourceTree = "<group>"; };
+		F62067B3021C1042B24AA500 /* Pods-MeasureARPusher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeasureARPusher.debug.xcconfig"; path = "Target Support Files/Pods-MeasureARPusher/Pods-MeasureARPusher.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +33,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25A358A58FC66DE80AC9EE6B /* Pods_MeasureARPusher.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		036FC4C8B5B6337817D4FFA4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F62067B3021C1042B24AA500 /* Pods-MeasureARPusher.debug.xcconfig */,
+				EE42F23157934299159C0FEC /* Pods-MeasureARPusher.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		A084EF937C32FB200C2734BB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				81F9F21FEC344D543B003BC9 /* Pods_MeasureARPusher.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CE2D2075236F736E00332592 = {
 			isa = PBXGroup;
 			children = (
 				CE2D2080236F736F00332592 /* MeasureARPusher */,
 				CE2D207F236F736F00332592 /* Products */,
+				036FC4C8B5B6337817D4FFA4 /* Pods */,
+				A084EF937C32FB200C2734BB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -71,9 +95,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE2D2090236F737100332592 /* Build configuration list for PBXNativeTarget "MeasureARPusher" */;
 			buildPhases = (
+				A92C1F3D08D09F03AE413438 /* [CP] Check Pods Manifest.lock */,
 				CE2D207A236F736F00332592 /* Sources */,
 				CE2D207B236F736F00332592 /* Frameworks */,
 				CE2D207C236F736F00332592 /* Resources */,
+				4A52385C735546B13E965388 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -129,6 +155,38 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4A52385C735546B13E965388 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MeasureARPusher/Pods-MeasureARPusher-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A92C1F3D08D09F03AE413438 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MeasureARPusher-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CE2D207A236F736F00332592 /* Sources */ = {
@@ -278,15 +336,17 @@
 		};
 		CE2D2091236F737100332592 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F62067B3021C1042B24AA500 /* Pods-MeasureARPusher.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y94SWT95X2;
 				INFOPLIST_FILE = MeasureARPusher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mycompany.MeasureARPusher;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mycompany.MeasurementARPusher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -295,15 +355,17 @@
 		};
 		CE2D2092236F737100332592 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EE42F23157934299159C0FEC /* Pods-MeasureARPusher.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y94SWT95X2;
 				INFOPLIST_FILE = MeasureARPusher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mycompany.MeasureARPusher;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mycompany.MeasurementARPusher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
