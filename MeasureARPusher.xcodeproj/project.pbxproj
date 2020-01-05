@@ -13,6 +13,7 @@
 		CE2D2087236F736F00332592 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE2D2085236F736F00332592 /* Main.storyboard */; };
 		CE2D2089236F737000332592 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE2D2088236F737000332592 /* Assets.xcassets */; };
 		CE2D208C236F737100332592 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE2D208A236F737100332592 /* LaunchScreen.storyboard */; };
+		CE32B50423C056CB00DAD0D1 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE32B50323C056CB00DAD0D1 /* Box.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		CE2D2088236F737000332592 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE2D208B236F737100332592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE2D208D236F737100332592 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE32B50323C056CB00DAD0D1 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		EE42F23157934299159C0FEC /* Pods-MeasureARPusher.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeasureARPusher.release.xcconfig"; path = "Target Support Files/Pods-MeasureARPusher/Pods-MeasureARPusher.release.xcconfig"; sourceTree = "<group>"; };
 		F62067B3021C1042B24AA500 /* Pods-MeasureARPusher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeasureARPusher.debug.xcconfig"; path = "Target Support Files/Pods-MeasureARPusher/Pods-MeasureARPusher.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -80,6 +82,7 @@
 			children = (
 				CE2D2081236F736F00332592 /* AppDelegate.swift */,
 				CE2D2083236F736F00332592 /* ViewController.swift */,
+				CE32B50323C056CB00DAD0D1 /* Box.swift */,
 				CE2D2085236F736F00332592 /* Main.storyboard */,
 				CE2D2088236F737000332592 /* Assets.xcassets */,
 				CE2D208A236F737100332592 /* LaunchScreen.storyboard */,
@@ -99,7 +102,6 @@
 				CE2D207A236F736F00332592 /* Sources */,
 				CE2D207B236F736F00332592 /* Frameworks */,
 				CE2D207C236F736F00332592 /* Resources */,
-				4A52385C735546B13E965388 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -157,17 +159,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4A52385C735546B13E965388 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MeasureARPusher/Pods-MeasureARPusher-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		A92C1F3D08D09F03AE413438 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -193,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE32B50423C056CB00DAD0D1 /* Box.swift in Sources */,
 				CE2D2084236F736F00332592 /* ViewController.swift in Sources */,
 				CE2D2082236F736F00332592 /* AppDelegate.swift in Sources */,
 			);
@@ -342,6 +334,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y94SWT95X2;
 				INFOPLIST_FILE = MeasureARPusher/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -361,6 +354,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y94SWT95X2;
 				INFOPLIST_FILE = MeasureARPusher/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

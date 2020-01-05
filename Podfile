@@ -6,6 +6,5 @@ target 'MeasureARPusher' do
   use_frameworks!
 
   # Pods for MeasureARPusher
-pod 'PusherSwift', :git => 'https://github.com/pusher/pusher-websocket-swift.git', :branch => 'swift-3.2'
-
+#pod 'PusherSwift', :git => 'https://github.com/pusher/pusher-websocket-swift.git', :branch => 'swift-3.2'
 end

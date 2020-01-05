@@ -10,86 +10,43 @@ import UIKit
 import SceneKit
 import ARKit
 
-class Box: SCNNode {
-    lazy var box: SCNNode = makeBox()
-    override init() {
-      super.init()
-    }
-    required init?(coder aDecoder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
-    }
-    func makeBox() -> SCNNode {
-      let box = SCNBox(        width: 0.01, height: 0.01, length: 0.01, chamferRadius: 0    )
-      return convertToNode(geometry: box)
-    }
-    func convertToNode(geometry: SCNGeometry) -> SCNNode {
-      for material in geometry.materials {
-        material.lightingModel = .constant
-        material.diffuse.contents = UIColor.white
-        material.isDoubleSided = false
+enum Mode {
+// enumeration to indicate the possible states of the app
+    case waitingForMeasuring
+    case measuring
 }
 
-func + (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
-  return SCNVector3Make(      left.x + right.x, left.y + right.y, left.z + right.z  )
-}
-func - (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
-  return SCNVector3Make(      left.x - right.x, left.y - right.y, left.z - right.z  )
-}
-
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController : UIViewController, ARSCNViewDelegate {
     
-    var box: Box! //3D box that is going to get drawn when measuring
-    var status: String! //text that says if app is ready or not to make measurements
-    var startPosition: SCNVector3! //measurement's start position
-    var distance: Float! //calculated distance from start to current position
-    var trackingState: ARCamera.TrackingState! //holds current tracking state of camera
-    enum Mode {  //enumeration to indicate possible states of the app
-      case waitingForMeasuring
-      case measuring
-    }
+    @IBOutlet weak var sceneView: ARSCNView!
+    @IBOutlet weak var statusTextView: UITextView!
+    
+    var box: Box!
+        // represents the 3D box that is going to get drawn when measuring
+    var status: String!
+        // text that tells us if the app is ready or not to take measurements (whether planes have been detected or not)
+    var startPosition: SCNVector3!
+        // represents measurement's start position
+    var distance: Float!
+        // calculated distance from the start to the current position (the measurement itself)
+    var trackingState: ARCamera.TrackingState!
+        // holds the current tracking state of the camera
     
     var mode: Mode = .waitingForMeasuring {
       didSet {
         switch mode {
-          case .waitingForMeasuring: //if set, assume app is not ready
+          case .waitingForMeasuring:
             status = "NOT READY"
-          case .measuring: //if set, size of box is reset
+          case .measuring:
             box.update(minExtents: SCNVector3Zero, maxExtents: SCNVector3Zero)
-            box.isHidden = false //if box is hidden, startPosition and distance reset
+            box.isHidden = false
             startPosition = nil
             distance = 0.0
             setStatusText()
         }
       }
     }
-    
-    func setStatusText() {
-      var text = "Status: \(status!)\n"
-      text += "Tracking: \(getTrackigDescription())\n"
-      text += "Distance: \(String(format:"%.2f cm", distance! * 100.0))"
-      statusTextView.text = text
-    }
-    func getTrackigDescription() -> String {
-      var description = ""
-      if let t = trackingState {
-        switch(t) {
-          case .notAvailable:
-            description = "TRACKING UNAVAILABLE"
-          case .normal:
-            description = "TRACKING NORMAL"
-          case .limited(let reason):
-            switch reason {  //FUCKKKKKK
-              case .excessiveMotion:
-                description = "TRACKING LIMITED - too much camera movement"
-              case .insufficientFeatures:
-                description = "TRACKING LIMITED - not enough surface detail"
-              case .initializing:
-                description = "INITIALIZING"
-            }
-        }
-      }
-      return description
-    }
+
     
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -108,7 +65,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
       // display the initial status
       setStatusText()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
       // create a session configuration with plane detection
@@ -117,33 +74,67 @@ class ViewController: UIViewController, ARSCNViewDelegate {
       // run the view's session
       sceneView.session.run(configuration)
     }
-
-    @IBOutlet weak var sceneView: ARSCNView!
-    @IBOutlet weak var statusTextView: UITextView!
     
     override func viewWillDisappear(_ animated: Bool) {
       super.viewWillDisappear(animated)
-      // Pause the view's session
+      // pause the view's session
       sceneView.session.pause()
+    }
+    
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+    
+    @IBAction func switchChanged(_ sender: UISwitch) {
+        if sender.isOn {
+            mode = .measuring
+        } else {
+            mode = .waitingForMeasuring
+        }
+    }
+}
+
+extension ViewController {
+    
+    func setStatusText() {
+      var text = "Status: \(status!)\n"
+      text += "Tracking: \(getTrackigDescription())\n"
+      text += "Distance: \(String(format:"%.2f cm", distance! * 100.0))"
+      statusTextView.text = text
+    }
+    
+    func getTrackigDescription() -> String {
+      var description = ""
+      if let t = trackingState {
+        switch(t) {
+          case .notAvailable:
+            description = "TRACKING UNAVAILABLE"
+          case .normal:
+            description = "TRACKING NORMAL"
+          case .limited(let reason):
+            switch reason {
+              case .excessiveMotion:
+                description =               "TRACKING LIMITED - Too much camera movement"
+              case .insufficientFeatures:
+                description =               "TRACKING LIMITED - Not enough surface detail"
+              default:
+                description = "INITIALIZING"
+            }
+        }
+      }
+      return description
     }
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
       trackingState = camera.trackingState
     }
     
-    (void)renderer:(id <SCNSceneRenderer>)renderer updateAtTime:(NSTimeInterval)time
-    // method is called once per frame (60x per second)
-    
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
       // Call the method asynchronously to perform
-      //  this heavy task without slowing down the UI
-      DispatchQueue.main.async {
-        self.measure()
-      }
-    }
-    
-    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-      // call the method asynchronously to perform
       //  this heavy task without slowing down the UI
       DispatchQueue.main.async {
         self.measure()
@@ -157,44 +148,39 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         status = "READY"
         if mode == .measuring {
         status = "MEASURING"
-        let worldPosition = SCNVector3Make(        result.worldTransform.columns.3.x,              result.worldTransform.columns.3.y,        result.worldTransform.columns.3.z)
-let angleInRadians = calculateAngleInRadians(from: startPosition!, to: worldPosition)
-            box.rotation = SCNVector4(x: 0, y: 1, z: 0, w: -(angleInRadians + Float.pi))
+        let worldPosition = SCNVector3Make(result.worldTransform.columns.3.x, result.worldTransform.columns.3.y,   result.worldTransform.columns.3.z)
         if startPosition == nil {
           startPosition = worldPosition
           box.position = worldPosition
+          distance = calculateDistance(from: startPosition!, to: worldPosition)
+          box.resizeTo(extent: distance)
+            let angleInRadians = calculateAngleInRadians(from: startPosition!, to: worldPosition)
+            box.rotation = SCNVector4(x: 0, y: 1, z: 0, w: -(angleInRadians + Float.pi))
         }
-      } else {
+        }
+      }
+      else {
         status = "NOT READY"
       }
-    }
         
-     func calculateAngleInRadians(from: SCNVector3, to: SCNVector3) -> Float {
-          let x = from.x - to.x
-          let z = from.z - to.z
-          return atan2(z, x)
-        }
-    
-    
-    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        // Do any additional setup after loading the view, typically from a nib.
-//    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    @IBAction func switchChanged(sender: UISwitch) {
-        if sender.isOn {
-            mode = .measuring
-        } else {
-            mode = .waitingForMeasuring
-        }
+        
+        
     }
     
+    func calculateDistance(from: SCNVector3, to: SCNVector3) -> Float {
+      let x = from.x - to.x
+      let y = from.y - to.y
+      let z = from.z - to.z
+      return sqrtf( (x * x) + (y * y) + (z * z))
+    }
+    
+    func calculateAngleInRadians(from: SCNVector3, to: SCNVector3) -> Float {
+      let x = from.x - to.x
+      let z = from.z - to.z
+      return atan2(z, x)
+    }
+    
+
 }
 
 

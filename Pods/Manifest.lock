@@ -1,22 +1,3 @@
-PODS:
-  - PusherSwift (4.2.1)
-
-DEPENDENCIES:
-  - PusherSwift (from `https://github.com/pusher/pusher-websocket-swift.git`, branch `swift-3.2`)
-
-EXTERNAL SOURCES:
-  PusherSwift:
-    :branch: swift-3.2
-    :git: https://github.com/pusher/pusher-websocket-swift.git
-
-CHECKOUT OPTIONS:
-  PusherSwift:
-    :commit: f89207931401652c39b1201da187f8274329c9ab
-    :git: https://github.com/pusher/pusher-websocket-swift.git
-
-SPEC CHECKSUMS:
-  PusherSwift: 0f0dddcca01e99d16da22bb995e820f5b274a483
-
-PODFILE CHECKSUM: b1d6d7a5da1463f70478a7e635fbc322339a6dc7
+PODFILE CHECKSUM: a4d26e32c82dd2e6c33dc5922ea2d9a9a2f77abc
 
 COCOAPODS: 1.8.4
