@@ -14,6 +14,9 @@
 		CE2D2089236F737000332592 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE2D2088236F737000332592 /* Assets.xcassets */; };
 		CE2D208C236F737100332592 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE2D208A236F737100332592 /* LaunchScreen.storyboard */; };
 		CE32B50423C056CB00DAD0D1 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE32B50323C056CB00DAD0D1 /* Box.swift */; };
+		E5A09AAF23C27E3300760D21 /* SCNSphere+Init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A09AAE23C27E3300760D21 /* SCNSphere+Init.swift */; };
+		E5A09AB123C2AB0D00760D21 /* TextNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A09AB023C2AB0D00760D21 /* TextNode.swift */; };
+		E5A09AB323C2AD1300760D21 /* LineNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A09AB223C2AD1300760D21 /* LineNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,9 @@
 		CE2D208B236F737100332592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE2D208D236F737100332592 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE32B50323C056CB00DAD0D1 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
+		E5A09AAE23C27E3300760D21 /* SCNSphere+Init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNSphere+Init.swift"; sourceTree = "<group>"; };
+		E5A09AB023C2AB0D00760D21 /* TextNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNode.swift; sourceTree = "<group>"; };
+		E5A09AB223C2AD1300760D21 /* LineNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNode.swift; sourceTree = "<group>"; };
 		EE42F23157934299159C0FEC /* Pods-MeasureARPusher.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeasureARPusher.release.xcconfig"; path = "Target Support Files/Pods-MeasureARPusher/Pods-MeasureARPusher.release.xcconfig"; sourceTree = "<group>"; };
 		F62067B3021C1042B24AA500 /* Pods-MeasureARPusher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeasureARPusher.debug.xcconfig"; path = "Target Support Files/Pods-MeasureARPusher/Pods-MeasureARPusher.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,6 +93,9 @@
 				CE2D2088236F737000332592 /* Assets.xcassets */,
 				CE2D208A236F737100332592 /* LaunchScreen.storyboard */,
 				CE2D208D236F737100332592 /* Info.plist */,
+				E5A09AAE23C27E3300760D21 /* SCNSphere+Init.swift */,
+				E5A09AB023C2AB0D00760D21 /* TextNode.swift */,
+				E5A09AB223C2AD1300760D21 /* LineNode.swift */,
 			);
 			path = MeasureARPusher;
 			sourceTree = "<group>";
@@ -185,7 +194,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE32B50423C056CB00DAD0D1 /* Box.swift in Sources */,
+				E5A09AB323C2AD1300760D21 /* LineNode.swift in Sources */,
+				E5A09AAF23C27E3300760D21 /* SCNSphere+Init.swift in Sources */,
 				CE2D2084236F736F00332592 /* ViewController.swift in Sources */,
+				E5A09AB123C2AB0D00760D21 /* TextNode.swift in Sources */,
 				CE2D2082236F736F00332592 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -332,9 +344,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y94SWT95X2;
+				DEVELOPMENT_TEAM = X9J72RLVFW;
 				INFOPLIST_FILE = MeasureARPusher/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -352,9 +364,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y94SWT95X2;
+				DEVELOPMENT_TEAM = X9J72RLVFW;
 				INFOPLIST_FILE = MeasureARPusher/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

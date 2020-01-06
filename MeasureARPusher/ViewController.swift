@@ -18,169 +18,216 @@ enum Mode {
 
 class ViewController : UIViewController, ARSCNViewDelegate {
     
-    @IBOutlet weak var sceneView: ARSCNView!
+    @IBOutlet weak var scnView: ARSCNView!
+    @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var statusTextView: UITextView!
     
-    var box: Box!
-        // represents the 3D box that is going to get drawn when measuring
-    var status: String!
-        // text that tells us if the app is ready or not to take measurements (whether planes have been detected or not)
-    var startPosition: SCNVector3!
-        // represents measurement's start position
-    var distance: Float!
-        // calculated distance from the start to the current position (the measurement itself)
-    var trackingState: ARCamera.TrackingState!
-        // holds the current tracking state of the camera
-    
-    var mode: Mode = .waitingForMeasuring {
-      didSet {
-        switch mode {
-          case .waitingForMeasuring:
-            status = "NOT READY"
-          case .measuring:
-            box.update(minExtents: SCNVector3Zero, maxExtents: SCNVector3Zero)
-            box.isHidden = false
-            startPosition = nil
-            distance = 0.0
-            setStatusText()
-        }
-      }
+    var viewCenter: CGPoint {
+      let viewBounds = view.bounds
+      return CGPoint(x: viewBounds.width / 2.0, y: viewBounds.height / 2.0)
     }
-
+    
+    var nodes: [SCNNode] = []
+    var nodeColor = UIColor.white
+    var nodeRadius = 0.005
+    var startNode: SCNNode!
+    var distance = 0.0
+    
+    var textNode: TextNode!
+    var lineNode: LineNode!
     
     override func viewDidLoad() {
-      super.viewDidLoad()
-      // set the view's delegate
-      sceneView.delegate = self
-      // set a padding in the text view
-      statusTextView.textContainerInset = UIEdgeInsetsMake(20.0, 10.0, 10.0, 0.0)
-      // instantiate the box and add it to the scene
-      box = Box()
-      box.isHidden = true;
-      sceneView.scene.rootNode.addChildNode(box)
-      // set the initial mode
-      mode = .waitingForMeasuring
-      // set the initial distance
-      distance = 0.0
-      // display the initial status
-      setStatusText()
+        super.viewDidLoad()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(sender:)))
+        scnView.addGestureRecognizer(tap)
+        setupScene()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-      super.viewWillAppear(animated)
-      // create a session configuration with plane detection
-      let configuration = ARWorldTrackingConfiguration()
-      configuration.planeDetection = .horizontal
-      // run the view's session
-      sceneView.session.run(configuration)
+        super.viewWillAppear(animated)
+        setupARSession()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-      super.viewWillDisappear(animated)
-      // pause the view's session
-      sceneView.session.pause()
+        super.viewWillDisappear(animated)
+        scnView.session.pause()
     }
     
     
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    @objc func handleTap(sender: UITapGestureRecognizer) {
+        let tapLocation = self.scnView.center// Get the center point, of the SceneView.
+        let hitTestResults = scnView.hitTest(tapLocation, types:.existingPlaneUsingExtent)
 
-    
-    @IBAction func switchChanged(_ sender: UISwitch) {
-        if sender.isOn {
-            mode = .measuring
-        } else {
-            mode = .waitingForMeasuring
-        }
-    }
-}
-
-extension ViewController {
-    
-    func setStatusText() {
-      var text = "Status: \(status!)\n"
-      text += "Tracking: \(getTrackigDescription())\n"
-      text += "Distance: \(String(format:"%.2f cm", distance! * 100.0))"
-      statusTextView.text = text
-    }
-    
-    func getTrackigDescription() -> String {
-      var description = ""
-      if let t = trackingState {
-        switch(t) {
-          case .notAvailable:
-            description = "TRACKING UNAVAILABLE"
-          case .normal:
-            description = "TRACKING NORMAL"
-          case .limited(let reason):
-            switch reason {
-              case .excessiveMotion:
-                description =               "TRACKING LIMITED - Too much camera movement"
-              case .insufficientFeatures:
-                description =               "TRACKING LIMITED - Not enough surface detail"
-              default:
-                description = "INITIALIZING"
+         if let result = hitTestResults.first {
+            if nodes.count == 2 {
+                cleanAllNodes()
+            }
+            
+            let position = SCNVector3.positionFrom(matrix: result.worldTransform)
+            let sphere = SCNSphere(color: self.nodeColor, radius: CGFloat(self.nodeRadius))
+            let node = SCNNode(geometry: sphere)
+            
+            node.position = position
+            
+            scnView.scene.rootNode.addChildNode(node)
+            
+            // Get the Last Node from the list
+            let lastNode = nodes.last
+            
+            // Add the Sphere to the list.
+            nodes.append(node)
+            
+            // Setting our starting point for drawing a line in real time
+            self.startNode = nodes.last
+            
+            if lastNode != nil {
+                // If there is 2 nodes or more
+                if nodes.count >= 2 {
+                    // Create a node line between the nodes
+                    let measureLine = LineNode(from: (lastNode?.position)!, to: node.position, lineColor: self.nodeColor)
+                    measureLine.name = "measureLine"
+                    // Add the Node to the scene.
+                    scnView.scene.rootNode.addChildNode(measureLine)
+                }
+                
+                self.distance = Double(lastNode!.position.distance(to: node.position)) * 100
+                print( String(format: "Distance between nodes:  %.2f cm", self.distance))
+                presentShoeSizes(distance: self.distance)
             }
         }
-      }
-      return description
+    }
+    
+    // renderer callback method
+//    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+//
+//        if nodes.count == 2 {
+//            self.startNode = nil
+//            self.lineNode.removeFromParentNode()
+//        }
+//
+//        DispatchQueue.main.async {
+//            // get current hit position
+//            // and check if start-node is available
+//            guard let currentPosition = self.doHitTestOnExistingPlanes(),
+//                let start = self.startNode else {
+//                    return
+//            }
+//            // line-node
+//            self.lineNode.removeFromParentNode()
+//            self.lineNode = LineNode(from: start.position, to: currentPosition, lineColor: self.nodeColor)
+//            self.lineNode.name = "lineInRealTime"
+//            self.scnView.scene.rootNode.addChildNode(self.lineNode!)
+//        }
+//    }
+    
+    func doHitTestOnExistingPlanes() -> SCNVector3? {
+        // hit-test of view's center with existing-planes
+        let results = scnView.hitTest(view.center, types: .featurePoint)
+        // check if result is available
+        if let result = results.first {
+            // get vector from transform
+            let hitPos = SCNVector3.positionFrom(matrix: result.worldTransform)
+            return hitPos
+        }
+        return nil
+    }
+    
+    func presentShoeSizes(distance: Double) {
+        if nodes.count == 2 {
+            // Get the Last Node from the list
+            let lastNode = nodes.last
+            let firtsNode = nodes.first
+            
+            let formatter = NumberFormatter()
+            formatter.minimumFractionDigits = 0
+            formatter.maximumFractionDigits = 1
+            
+            let stringSize = formatter.string(for: distance)
+            
+            if let node1 = firtsNode, let node2 = lastNode  {
+                // Calculate the middle point between the two SphereNodes.
+                let minPosition = node1.position
+                let maxPosition = node2.position
+                let dx = ((maxPosition.x + minPosition.x)/2.0)
+                let dy = (maxPosition.y + minPosition.y)/2.0 + 0.04
+                let dz = (maxPosition.z + minPosition.z)/2.0
+                let position =  SCNVector3(dx, dy, dz)
+                // Create the textNode
+                self.textNode = TextNode(stringSize!)
+                self.textNode.color = nodeColor
+                self.textNode.position = position
+                self.textNode.font = UIFont(name: "AvenirNext-Bold", size: 0.1)
+                self.scnView.scene.rootNode.addChildNode(self.textNode!)
+            }
+        }
     }
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-      trackingState = camera.trackingState
+            print("Camera State: \(camera.trackingState)")
     }
     
-    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-      // Call the method asynchronously to perform
-      //  this heavy task without slowing down the UI
-      DispatchQueue.main.async {
-        self.measure()
-      }
+    func cleanAllNodes() {
+           if nodes.count > 0 {
+               for node in nodes {
+                   node.removeFromParentNode()
+               }
+               for node in scnView.scene.rootNode.childNodes {
+                   if node.name == "measureLine" {
+                       node.removeFromParentNode()
+                   }
+               }
+               nodes = []
+           }
     }
     
-    func measure() {
-      let screenCenter : CGPoint = CGPoint(x: self.sceneView.bounds.midX, y: self.sceneView.bounds.midY)
-      let planeTestResults = sceneView.hitTest(screenCenter, types: [.existingPlaneUsingExtent])
-      if let result = planeTestResults.first {
-        status = "READY"
-        if mode == .measuring {
-        status = "MEASURING"
-        let worldPosition = SCNVector3Make(result.worldTransform.columns.3.x, result.worldTransform.columns.3.y,   result.worldTransform.columns.3.z)
-        if startPosition == nil {
-          startPosition = worldPosition
-          box.position = worldPosition
-          distance = calculateDistance(from: startPosition!, to: worldPosition)
-          box.resizeTo(extent: distance)
-            let angleInRadians = calculateAngleInRadians(from: startPosition!, to: worldPosition)
-            box.rotation = SCNVector4(x: 0, y: 1, z: 0, w: -(angleInRadians + Float.pi))
-        }
-        }
-      }
-      else {
-        status = "NOT READY"
-      }
-        
-        
-        
-    }
-    
-    func calculateDistance(from: SCNVector3, to: SCNVector3) -> Float {
-      let x = from.x - to.x
-      let y = from.y - to.y
-      let z = from.z - to.z
-      return sqrtf( (x * x) + (y * y) + (z * z))
-    }
-    
-    func calculateAngleInRadians(from: SCNVector3, to: SCNVector3) -> Float {
-      let x = from.x - to.x
-      let z = from.z - to.z
-      return atan2(z, x)
-    }
-    
+    func setupScene()  {
+        let scene = SCNScene()
 
+        self.scnView.delegate = self
+        self.scnView.showsStatistics = true
+        self.scnView.automaticallyUpdatesLighting = true
+        self.scnView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
+        self.scnView.scene = scene
+    }
+    
+    func setupARSession() {
+         let configuration = ARWorldTrackingConfiguration()
+         configuration.planeDetection = .horizontal
+         
+         scnView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+     }
+}
+
+extension SCNVector3 {
+    func distance(to destination: SCNVector3) -> CGFloat {
+        let dx = destination.x - x
+        let dy = destination.y - y
+        let dz = destination.z - z
+        return CGFloat(sqrt(dx*dx + dy*dy + dz*dz))
+    }
+
+    static func positionFrom(matrix: matrix_float4x4) -> SCNVector3 {
+        let column = matrix.columns.3
+        return SCNVector3(column.x, column.y, column.z)
+    }
+}
+
+extension SCNNode {
+    static func createLineNode(fromNode: SCNNode, toNode: SCNNode, andColor color: UIColor) -> SCNNode {
+        let line = lineFrom(vector: fromNode.position, toVector: toNode.position)
+        let lineNode = SCNNode(geometry: line)
+        let planeMaterial = SCNMaterial()
+        planeMaterial.diffuse.contents = color
+        line.materials = [planeMaterial]
+        return lineNode
+    }
+    
+    static func lineFrom(vector vector1: SCNVector3, toVector vector2: SCNVector3) -> SCNGeometry {
+        let indices: [Int32] = [0, 1]
+        let source = SCNGeometrySource(vertices: [vector1, vector2])
+        let element = SCNGeometryElement(indices: indices, primitiveType: .line)
+        return SCNGeometry(sources: [source], elements: [element])
+    }
 }
 
 
